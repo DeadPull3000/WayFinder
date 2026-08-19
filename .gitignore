@@ -1,0 +1,17 @@
+# Environments
+wayfinder_env/
+venv/
+env/
+.env
+
+# Data
+data/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env.bak/
+venv.bak/
