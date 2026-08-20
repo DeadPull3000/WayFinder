@@ -47,11 +47,8 @@ def format_geojson(route_data, route_name):
 
 @app.post("/api/route")
 def get_route(req: RouteRequest):
-    start_coords = (req.start_lat, req.start_lon)
-    end_coords = (req.end_lat, req.end_lon)
-    
-    # Calculate routes
-    routes = calculate_routes(start_coords, end_coords)
+    # Calculate routes passing explicit longitude and latitude
+    routes = calculate_routes(req.start_lon, req.start_lat, req.end_lon, req.end_lat)
     
     # Format and return as GeoJSON
     return {

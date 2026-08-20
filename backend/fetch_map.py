@@ -1,22 +1,12 @@
 import os
 import osmnx as ox
-from shapely.geometry import Polygon
 
 def main():
     output_path = "data/processed/phoenix_walk.graphml"
     
-    # Custom polygon defining Downtown Phoenix, Arizona to match FortyGuard AOI
-    # Bounding box approximately: min_lon=-112.08, min_lat=33.44, max_lon=-112.06, max_lat=33.455
-    poly = Polygon([
-        [-112.080, 33.440],
-        [-112.060, 33.440],
-        [-112.060, 33.455],
-        [-112.080, 33.455],
-        [-112.080, 33.440]
-    ])
-    
-    print("Downloading pedestrian street network for Downtown Phoenix bounding box polygon...")
-    graph = ox.graph_from_polygon(poly, network_type="walk")
+    print("Downloading pedestrian street network around (33.45, -112.08) within 3000m...")
+    # Use graph_from_point for a larger, consistent bounding area
+    graph = ox.graph_from_point((33.45, -112.08), dist=3000, network_type="walk")
     
     # Ensure parent directory exists
     os.makedirs(os.path.dirname(output_path), exist_ok=True)

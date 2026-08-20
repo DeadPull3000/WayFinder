@@ -6,10 +6,9 @@ from shapely.geometry import LineString
 
 import numpy as np
 
-def calculate_routes(start_coords, end_coords):
+def calculate_routes(start_lon, start_lat, end_lon, end_lat):
     """
-    start_coords: tuple (lat, lon)
-    end_coords: tuple (lat, lon)
+    Directly accept coordinates to prevent (lat, lon) mixups.
     """
     # Load the original graph to extract node geometries
     G_orig = ox.load_graphml("data/processed/phoenix_walk.graphml")
@@ -47,10 +46,6 @@ def calculate_routes(start_coords, end_coords):
     
     # Rebuild graph from nodes and enriched edges
     G = ox.convert.graph_from_gdfs(gdf_nodes, gdf_edges)
-    
-    # Unpack coordinates (lat, lon)
-    start_lat, start_lon = start_coords
-    end_lat, end_lon = end_coords
     
     # Find nearest nodes to start and end coordinates (X=lon, Y=lat)
     orig_node = ox.distance.nearest_nodes(G, X=start_lon, Y=start_lat)
@@ -116,7 +111,7 @@ if __name__ == "__main__":
     end = (33.450, -112.065)
     
     print(f"Calculating routes from {start} to {end}...")
-    routes = calculate_routes(start, end)
+    routes = calculate_routes(start[1], start[0], end[1], end[0])
     
     for route_name, data in routes.items():
         print(f"\n{route_name}:")
