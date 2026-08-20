@@ -31,6 +31,9 @@ def calculate_routes(start_lon, start_lat, end_lon, end_lat):
     gdf_edges['length'] = gdf_edges['length'].astype(float)
     gdf_edges['temperature_c'] = gdf_edges['temperature_c'].astype(float)
     
+    top_temps = sorted(gdf_edges['temperature_c'].dropna().unique(), reverse=True)[:5]
+    print(f"Top 5 distinct temperatures in graph: {top_temps}")
+    
     # Calculate costs
     # time_cost: length (meters) / 1.4 (average walking speed in m/s)
     gdf_edges['time_cost'] = gdf_edges['length'] / 1.4

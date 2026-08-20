@@ -42,10 +42,15 @@ def main():
 
     # Handle missing data
     print("Filling missing temperature values...")
+    import numpy as np
     if "temperature_c" not in enriched_edges.columns:
-        enriched_edges["temperature_c"] = 35.0
-    else:
-        enriched_edges["temperature_c"] = enriched_edges["temperature_c"].fillna(35.0)
+        enriched_edges["temperature_c"] = np.nan
+        
+    missing_mask = enriched_edges["temperature_c"].isna()
+    num_missing = missing_mask.sum()
+    if num_missing > 0:
+        print(f"Injecting high-variance dummy temperatures for {num_missing} edges...")
+        enriched_edges.loc[missing_mask, "temperature_c"] = np.random.uniform(30.0, 45.0, size=num_missing)
 
     # Some edges might intersect multiple polygons, leading to duplicate edges in the sjoin result.
     # To be safe, we drop duplicates by the edge index (u, v, key)
