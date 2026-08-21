@@ -10,7 +10,7 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 // State variables
 let startMarker = null;
 let endMarker = null;
-let routeLayers = [];
+let routeLayerGroup = L.layerGroup().addTo(map);
 
 // DOM Elements
 const startInput = document.getElementById('start-input');
@@ -58,8 +58,7 @@ clearBtn.addEventListener('click', () => {
 });
 
 const clearRoutes = () => {
-    routeLayers.forEach(layer => map.removeLayer(layer));
-    routeLayers = [];
+    routeLayerGroup.clearLayers();
 };
 
 // Fetch Routes
@@ -91,10 +90,10 @@ findBtn.addEventListener('click', async () => {
         const data = await response.json();
         
         // Render Routes
-        // Render order matters (widest bottom, thinnest top)
-        renderRoute(data.fastest, '#e74c3c', 8);
-        renderRoute(data.balanced, '#f39c12', 5);
-        renderRoute(data.coolest, '#3498db', 2);
+        // Render order matters: Coolest last so it stays on top.
+        renderRoute(data.fastest, '#e74c3c', 4, 0.8);
+        renderRoute(data.balanced, '#f39c12', 4, 0.8);
+        renderRoute(data.coolest, '#3498db', 6, 1.0);
         
         // Update Metrics
         updateMetrics('fastest', data.fastest.features[0].properties);
@@ -112,15 +111,15 @@ findBtn.addEventListener('click', async () => {
     }
 });
 
-const renderRoute = (geojsonData, color, weight) => {
+const renderRoute = (geojsonData, color, weight, opacity) => {
     const layer = L.geoJSON(geojsonData, {
         style: {
             color: color,
             weight: weight,
-            opacity: 0.9
+            opacity: opacity
         }
-    }).addTo(map);
-    routeLayers.push(layer);
+    });
+    routeLayerGroup.addLayer(layer);
 };
 
 const updateMetrics = (idPrefix, props) => {
@@ -131,5 +130,5 @@ const updateMetrics = (idPrefix, props) => {
     document.getElementById(`${idPrefix}-time`).textContent = `${mins}m ${secs}s`;
     
     // Format heat
-    document.getElementById(`${idPrefix}-heat`).textContent = props.total_heat_exposure.toLocaleString(undefined, {minimumFractionDigits: 1, maximumFractionDigits: 1});
+    document.getElementById(`${idPrefix}-heat`).textContent = Math.round(props.total_heat_exposure).toLocaleString();
 };
