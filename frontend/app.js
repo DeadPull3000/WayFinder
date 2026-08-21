@@ -132,3 +132,46 @@ const updateMetrics = (idPrefix, props) => {
     // Format heat
     document.getElementById(`${idPrefix}-heat`).textContent = Math.round(props.total_heat_exposure).toLocaleString();
 };
+
+// Fetch and Render Heatmap
+const loadHeatmap = async () => {
+    try {
+        const response = await fetch('http://localhost:8000/api/heatmap');
+        if (!response.ok) throw new Error('Failed to fetch heatmap');
+        
+        const data = await response.json();
+        
+        const getColor = (temp) => {
+            if (temp > 40) return '#8B0000'; // Dark Red
+            if (temp >= 35) return '#FFA500'; // Orange
+            return '#FFFFE0'; // Light Yellow
+        };
+        
+        // Add heatmap layer behind routes
+        const heatmapLayer = L.geoJSON(data, {
+            style: (feature) => {
+                return {
+                    fillColor: getColor(feature.properties.temperature_c),
+                    color: getColor(feature.properties.temperature_c),
+                    weight: 0,
+                    fillOpacity: 0.35
+                };
+            },
+            onEachFeature: (feature, layer) => {
+                if (feature.properties && feature.properties.temperature_c) {
+                    layer.bindPopup(`Temperature: ${feature.properties.temperature_c}°C`);
+                }
+            }
+        });
+        
+        // Insert heatmap layer behind route layers but above base map
+        heatmapLayer.addTo(map);
+        heatmapLayer.bringToBack();
+        
+    } catch (error) {
+        console.error('Error loading heatmap:', error);
+    }
+};
+
+// Load heatmap on startup
+loadHeatmap();

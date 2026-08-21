@@ -57,4 +57,16 @@ def get_route(req: RouteRequest):
         "balanced": format_geojson(routes["balanced_route"], "Balanced Route")
     }
 
+@app.get("/api/heatmap")
+def get_heatmap():
+    heat_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "raw", "phoenix_heat.json")
+    if os.path.exists(heat_path):
+        import json
+        with open(heat_path, "r") as f:
+            heat_data = json.load(f)
+            # Extracted FeatureCollection inside result.map_data
+            feature_collection = heat_data.get("result", {}).get("map_data", {})
+            return feature_collection
+    return {"type": "FeatureCollection", "features": []}
+
 # To run: uvicorn main:app --reload --port 8000
