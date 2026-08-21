@@ -178,3 +178,18 @@ button {
     width: 100%;
     z-index: 1;
 }
+
+/* Tooltip Styles */
+.heat-tooltip {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    padding: 6px 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.heat-tooltip::before {
+    display: none; /* Hide default leaflet tooltip triangle */
+}

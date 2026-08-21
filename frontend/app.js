@@ -32,16 +32,20 @@ const createIcon = (color) => {
 const startIcon = createIcon('#27ae60');
 const endIcon = createIcon('#c0392b');
 
-// Map Click Handler
-map.on('click', function(e) {
+const handlePinDrop = (latlng) => {
     if (!startMarker) {
-        startMarker = L.marker(e.latlng, {icon: startIcon}).addTo(map);
-        startInput.value = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+        startMarker = L.marker(latlng, {icon: startIcon}).addTo(map);
+        startInput.value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
     } else if (!endMarker) {
-        endMarker = L.marker(e.latlng, {icon: endIcon}).addTo(map);
-        endInput.value = `${e.latlng.lat.toFixed(5)}, ${e.latlng.lng.toFixed(5)}`;
+        endMarker = L.marker(latlng, {icon: endIcon}).addTo(map);
+        endInput.value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
         findBtn.disabled = false;
     }
+};
+
+// Map Click Handler
+map.on('click', function(e) {
+    handlePinDrop(e.latlng);
 });
 
 // Clear Map
@@ -159,8 +163,9 @@ const loadHeatmap = async () => {
             },
             onEachFeature: (feature, layer) => {
                 if (feature.properties && feature.properties.temperature_c) {
-                    layer.bindPopup(`Temperature: ${feature.properties.temperature_c}°C`);
+                    layer.bindTooltip(`Temperature: ${feature.properties.temperature_c}°C`, { sticky: true, className: 'heat-tooltip' });
                 }
+                layer.on('click', function(e) { handlePinDrop(e.latlng); });
             }
         });
         
