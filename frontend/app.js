@@ -91,9 +91,9 @@ findBtn.addEventListener('click', async () => {
         
         // Render Routes
         // Render order matters: Coolest last so it stays on top.
-        renderRoute(data.fastest, '#e74c3c', 4, 0.8);
-        renderRoute(data.balanced, '#f39c12', 4, 0.8);
-        renderRoute(data.coolest, '#3498db', 6, 1.0);
+        renderRoute(data.fastest, '#e74c3c', 8, 0.6);
+        renderRoute(data.balanced, '#f39c12', 5, 0.8);
+        renderRoute(data.coolest, '#3498db', 3, 1.0);
         
         // Update Metrics
         updateMetrics('fastest', data.fastest.features[0].properties);
