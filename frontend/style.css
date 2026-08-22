@@ -193,3 +193,8 @@ button {
 .heat-tooltip::before {
     display: none; /* Hide default leaflet tooltip triangle */
 }
+
+/* Prevent browser focus outline on Leaflet SVG paths */
+path.leaflet-interactive:focus {
+    outline: none !important;
+}

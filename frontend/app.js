@@ -32,16 +32,33 @@ const createIcon = (color) => {
 const startIcon = createIcon('#27ae60');
 const endIcon = createIcon('#c0392b');
 
-const handlePinDrop = (latlng) => {
+function handlePinDrop(latlng) {
+    // Force close any stuck tooltips on click
+    map.closeTooltip();
+
     if (!startMarker) {
-        startMarker = L.marker(latlng, {icon: startIcon}).addTo(map);
-        startInput.value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
+        // State 1: No start marker exists. Place Start.
+        startMarker = L.circleMarker(latlng, { color: 'green', radius: 8, fillOpacity: 1 }).addTo(map);
+        document.querySelector('input[placeholder*="start"], #start-input').value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
     } else if (!endMarker) {
-        endMarker = L.marker(latlng, {icon: endIcon}).addTo(map);
-        endInput.value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
+        // State 2: Start exists, End doesn't. Place End.
+        endMarker = L.circleMarker(latlng, { color: 'red', radius: 8, fillOpacity: 1 }).addTo(map);
+        document.querySelector('input[placeholder*="end"], #end-input').value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
         findBtn.disabled = false;
+    } else {
+        // State 3: Both exist. Clear map and start over.
+        map.removeLayer(startMarker);
+        map.removeLayer(endMarker);
+        routeLayerGroup.clearLayers();
+        metricsContainer.style.display = 'none';
+        
+        startMarker = L.circleMarker(latlng, { color: 'green', radius: 8, fillOpacity: 1 }).addTo(map);
+        endMarker = null;
+        document.querySelector('input[placeholder*="start"], #start-input').value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
+        document.querySelector('input[placeholder*="end"], #end-input').value = '';
+        findBtn.disabled = true;
     }
-};
+}
 
 // Map Click Handler
 map.on('click', function(e) {
@@ -161,11 +178,22 @@ const loadHeatmap = async () => {
                     fillOpacity: 0.35
                 };
             },
-            onEachFeature: (feature, layer) => {
+            onEachFeature: function(feature, layer) {
+                // Ensure tooltips are strictly hover-only
                 if (feature.properties && feature.properties.temperature_c) {
-                    layer.bindTooltip(`Temperature: ${feature.properties.temperature_c}°C`, { sticky: true, className: 'heat-tooltip' });
+                    layer.bindTooltip(`Temperature: ${feature.properties.temperature_c.toFixed(1)}°C`, {
+                        sticky: true,
+                        permanent: false, // Prevents them from getting stuck
+                        direction: "auto",
+                        className: "heat-tooltip"
+                    });
                 }
-                layer.on('click', function(e) { handlePinDrop(e.latlng); });
+
+                // Forward the click safely
+                layer.on('click', function(e) {
+                    L.DomEvent.stopPropagation(e); // Stop the event from causing Leaflet visual glitches
+                    handlePinDrop(e.latlng);
+                });
             }
         });
         
