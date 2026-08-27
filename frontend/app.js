@@ -8,8 +8,6 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 }).addTo(map);
 
 // State variables
-let startMarker = null;
-let endMarker = null;
 let routeLayerGroup = L.layerGroup().addTo(map);
 
 // DOM Elements
@@ -32,31 +30,67 @@ const createIcon = (color) => {
 const startIcon = createIcon('#27ae60');
 const endIcon = createIcon('#c0392b');
 
-function handlePinDrop(latlng) {
-    // Force close any stuck tooltips on click
-    map.closeTooltip();
-
-    if (!startMarker) {
-        // State 1: No start marker exists. Place Start.
-        startMarker = L.circleMarker(latlng, { color: 'green', radius: 8, fillOpacity: 1 }).addTo(map);
-        document.querySelector('input[placeholder*="start"], #start-input').value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
-    } else if (!endMarker) {
-        // State 2: Start exists, End doesn't. Place End.
-        endMarker = L.circleMarker(latlng, { color: 'red', radius: 8, fillOpacity: 1 }).addTo(map);
-        document.querySelector('input[placeholder*="end"], #end-input').value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
-        findBtn.disabled = false;
-    } else {
-        // State 3: Both exist. Clear map and start over.
-        map.removeLayer(startMarker);
-        map.removeLayer(endMarker);
-        routeLayerGroup.clearLayers();
-        metricsContainer.style.display = 'none';
+function safelyUpdateInput(keyword, latlng) {
+    try {
+        // Case-insensitive search for the input boxes, covering IDs or placeholders
+        let input = document.getElementById(`${keyword}-input`) || 
+                    document.getElementById(keyword) || 
+                    document.querySelector(`input[placeholder*="${keyword}" i]`);
         
-        startMarker = L.circleMarker(latlng, { color: 'green', radius: 8, fillOpacity: 1 }).addTo(map);
-        endMarker = null;
-        document.querySelector('input[placeholder*="start"], #start-input').value = `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}`;
-        document.querySelector('input[placeholder*="end"], #end-input').value = '';
-        findBtn.disabled = true;
+        if (input) {
+            input.value = latlng ? `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}` : '';
+        } else {
+            console.warn(`Thermal Wayfinder Warning: Could not find HTML input for '${keyword}'. Check your HTML IDs.`);
+        }
+    } catch (err) {
+        console.error("Error updating input:", err);
+    }
+}
+
+let startMarker = null;
+let endMarker = null;
+
+function handlePinDrop(latlng) {
+    console.log("Map clicked at:", latlng); // Debugging
+
+    try {
+        map.closeTooltip();
+    } catch (e) {}
+
+    // Ensure markers are drawn in the 'markerPane' so they stay ABOVE the heatmap polygons
+    let markerOptions = { radius: 8, fillOpacity: 1, pane: 'markerPane', weight: 2, color: 'white' };
+
+    try {
+        if (!startMarker) {
+            markerOptions.fillColor = 'green';
+            startMarker = L.circleMarker(latlng, markerOptions).addTo(map);
+            safelyUpdateInput('start', latlng);
+        } else if (!endMarker) {
+            markerOptions.fillColor = 'red';
+            endMarker = L.circleMarker(latlng, markerOptions).addTo(map);
+            safelyUpdateInput('end', latlng);
+            findBtn.disabled = false; // Add this back so the user can search
+        } else {
+            // Reset state
+            map.removeLayer(startMarker);
+            map.removeLayer(endMarker);
+            
+            // If routes exist on the map, clear them too (ensure your route layer variable matches this)
+            if (typeof routeLayerGroup !== 'undefined' && routeLayerGroup) {
+                routeLayerGroup.clearLayers();
+            }
+            metricsContainer.style.display = 'none'; // Add this back
+            
+            markerOptions.fillColor = 'green';
+            startMarker = L.circleMarker(latlng, markerOptions).addTo(map);
+            endMarker = null;
+            
+            safelyUpdateInput('start', latlng);
+            safelyUpdateInput('end', null); // Clear the end input
+            findBtn.disabled = true; // Add this back
+        }
+    } catch (err) {
+        console.error("Critical error in handlePinDrop:", err);
     }
 }
 
