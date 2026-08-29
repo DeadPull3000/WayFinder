@@ -63,6 +63,7 @@ def calculate_routes(start_lon, start_lat, end_lon, end_lat):
         geom = []
         total_time = 0
         total_heat_exposure = 0
+        temperature_profile = []
         
         for u, v in zip(path[:-1], path[1:]):
             edge_data = G.get_edge_data(u, v)
@@ -79,30 +80,41 @@ def calculate_routes(start_lon, start_lat, end_lon, end_lat):
                 geom.append(LineString([(node_u['x'], node_u['y']), (node_v['x'], node_v['y'])]))
                 
             total_time += data['time_cost']
-            # Accumulate heat exposure over time
-            total_heat_exposure += data['temperature_c'] * data['time_cost']
             
-        return geom, total_time, total_heat_exposure
+            # Get temperature, defaulting to 35.0 if missing or nan
+            temp = data.get('temperature_c', 35.0)
+            if np.isnan(temp):
+                temp = 35.0
+                
+            temperature_profile.append(round(temp, 1))
+            
+            # Accumulate heat exposure over time
+            total_heat_exposure += temp * data['time_cost']
+            
+        return geom, total_time, total_heat_exposure, temperature_profile
 
-    geom_time, time_t, time_h = get_route_info(path_time)
-    geom_heat, heat_t, heat_h = get_route_info(path_heat)
-    geom_bal, bal_t, bal_h = get_route_info(path_balanced)
+    geom_time, time_t, time_h, time_prof = get_route_info(path_time)
+    geom_heat, heat_t, heat_h, heat_prof = get_route_info(path_heat)
+    geom_bal, bal_t, bal_h, bal_prof = get_route_info(path_balanced)
     
     results = {
         "time_route": {
             "geometry": geom_time,
             "total_time_seconds": time_t,
-            "total_heat_exposure": time_h
+            "total_heat_exposure": time_h,
+            "temperature_profile": time_prof
         },
         "heat_route": {
             "geometry": geom_heat,
             "total_time_seconds": heat_t,
-            "total_heat_exposure": heat_h
+            "total_heat_exposure": heat_h,
+            "temperature_profile": heat_prof
         },
         "balanced_route": {
             "geometry": geom_bal,
             "total_time_seconds": bal_t,
-            "total_heat_exposure": bal_h
+            "total_heat_exposure": bal_h,
+            "temperature_profile": bal_prof
         }
     }
     return results

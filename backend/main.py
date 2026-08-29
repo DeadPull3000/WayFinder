@@ -36,7 +36,8 @@ def format_geojson(route_data, route_name):
         "properties": {
             "name": route_name,
             "total_time_seconds": round(route_data["total_time_seconds"], 2),
-            "total_heat_exposure": round(route_data["total_heat_exposure"], 2)
+            "total_heat_exposure": round(route_data["total_heat_exposure"], 2),
+            "temperature_profile": route_data.get("temperature_profile", [])
         }
     }
     
