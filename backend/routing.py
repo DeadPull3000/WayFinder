@@ -6,10 +6,17 @@ from shapely.geometry import LineString
 
 import numpy as np
 
-def calculate_routes(start_lon, start_lat, end_lon, end_lat):
+def calculate_routes(start_lon, start_lat, end_lon, end_lat, time_str="15:00"):
     """
     Directly accept coordinates to prevent (lat, lon) mixups.
     """
+    time_multipliers = {
+        "08:00": 0.80,
+        "11:00": 0.92,
+        "15:00": 1.00,
+        "19:00": 0.90
+    }
+    multiplier = time_multipliers.get(time_str, 1.00)
     # Load the original graph to extract node geometries
     G_orig = ox.load_graphml("data/processed/phoenix_walk.graphml")
     gdf_nodes, _ = ox.convert.graph_to_gdfs(G_orig)
@@ -38,8 +45,11 @@ def calculate_routes(start_lon, start_lat, end_lon, end_lat):
     # time_cost: length (meters) / 1.4 (average walking speed in m/s)
     gdf_edges['time_cost'] = gdf_edges['length'] / 1.4
     
-    # heat_cost: time_cost * (temperature_c ** 2)
-    gdf_edges['heat_cost'] = gdf_edges['time_cost'] * (gdf_edges['temperature_c'] ** 2)
+    # Adjust temperature based on time of day
+    gdf_edges['adjusted_temp'] = gdf_edges['temperature_c'] * multiplier
+    
+    # heat_cost: time_cost * (adjusted_temp ** 2)
+    gdf_edges['heat_cost'] = gdf_edges['time_cost'] * (gdf_edges['adjusted_temp'] ** 2)
     
     # balanced_cost: combination of time and heat
     gdf_edges['balanced_cost'] = (gdf_edges['time_cost'] * 0.5) + (gdf_edges['heat_cost'] * 0.5)
@@ -81,10 +91,10 @@ def calculate_routes(start_lon, start_lat, end_lon, end_lat):
                 
             total_time += data['time_cost']
             
-            # Get temperature, defaulting to 35.0 if missing or nan
-            temp = data.get('temperature_c', 35.0)
+            # Get adjusted temperature, defaulting to 35.0 * multiplier if missing or nan
+            temp = data.get('adjusted_temp', 35.0 * multiplier)
             if np.isnan(temp):
-                temp = 35.0
+                temp = 35.0 * multiplier
                 
             temperature_profile.append(round(temp, 1))
             

@@ -25,6 +25,7 @@ class RouteRequest(BaseModel):
     start_lon: float
     end_lat: float
     end_lon: float
+    time: str = "15:00"
 
 def format_geojson(route_data, route_name):
     # route_data['geometry'] is a list of shapely LineStrings
@@ -49,7 +50,7 @@ def format_geojson(route_data, route_name):
 @app.post("/api/route")
 def get_route(req: RouteRequest):
     # Calculate routes passing explicit longitude and latitude
-    routes = calculate_routes(req.start_lon, req.start_lat, req.end_lon, req.end_lat)
+    routes = calculate_routes(req.start_lon, req.start_lat, req.end_lon, req.end_lat, req.time)
     
     # Format and return as GeoJSON
     return {
