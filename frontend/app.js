@@ -194,11 +194,14 @@ findBtn.addEventListener('click', async () => {
     findBtn.textContent = 'Calculating...';
     clearRoutes();
     
+    const departureTime = document.getElementById('departure-time').value;
+    
     const payload = {
         start_lat: startMarker.getLatLng().lat,
         start_lon: startMarker.getLatLng().lng,
         end_lat: endMarker.getLatLng().lat,
-        end_lon: endMarker.getLatLng().lng
+        end_lon: endMarker.getLatLng().lng,
+        time: departureTime
     };
     
     try {

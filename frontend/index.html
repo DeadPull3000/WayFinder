@@ -35,6 +35,16 @@
                     <input type="text" id="end-input" placeholder="Click map to set end..." readonly>
                 </div>
                 
+                <div class="time-selector" style="margin-bottom: 15px;">
+                    <label for="departure-time" style="display: block; font-size: 14px; font-weight: bold; margin-bottom: 5px;">Departure Time</label>
+                    <select id="departure-time" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                        <option value="08:00">08:00 AM (Morning)</option>
+                        <option value="11:00">11:00 AM (Mid-Day)</option>
+                        <option value="15:00" selected>03:00 PM (Peak Heat)</option>
+                        <option value="19:00">07:00 PM (Evening)</option>
+                    </select>
+                </div>
+                
                 <button id="find-routes-btn" disabled>Find Routes</button>
                 <button id="clear-btn">Clear Map</button>
             </div>
