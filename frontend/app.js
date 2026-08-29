@@ -9,7 +9,9 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 
 // State variables
 let routeLayerGroup = L.layerGroup().addTo(map);
+let interventionLayerGroup = L.layerGroup().addTo(map);
 let heatChartInstance = null;
+let coolingInterventions = [];
 
 function renderHeatChart(fastestProfile, coolestProfile) {
     const ctx = document.getElementById('heatChart').getContext('2d');
@@ -113,6 +115,17 @@ let endMarker = null;
 function handlePinDrop(latlng) {
     console.log("Map clicked at:", latlng); // Debugging
 
+    const plannerMode = document.getElementById('planner-mode');
+    if (plannerMode && plannerMode.checked) {
+        coolingInterventions.push({ lat: latlng.lat, lng: latlng.lng });
+        L.circle(latlng, { radius: 150, color: '#3498db', fillColor: '#3498db', fillOpacity: 0.4, weight: 2 }).addTo(interventionLayerGroup);
+        
+        if (startMarker && endMarker) {
+            findBtn.click();
+        }
+        return;
+    }
+
     try {
         map.closeTooltip();
     } catch (e) {}
@@ -192,6 +205,9 @@ clearBtn.addEventListener('click', () => {
         heatChartInstance.destroy();
         heatChartInstance = null;
     }
+    
+    interventionLayerGroup.clearLayers();
+    coolingInterventions = [];
 });
 
 const clearRoutes = () => {
@@ -213,7 +229,8 @@ findBtn.addEventListener('click', async () => {
         start_lon: startMarker.getLatLng().lng,
         end_lat: endMarker.getLatLng().lat,
         end_lon: endMarker.getLatLng().lng,
-        time: departureTime
+        time: departureTime,
+        interventions: coolingInterventions
     };
     
     try {

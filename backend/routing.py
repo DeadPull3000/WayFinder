@@ -6,10 +6,12 @@ from shapely.geometry import LineString
 
 import numpy as np
 
-def calculate_routes(start_lon, start_lat, end_lon, end_lat, time_str="15:00"):
+def calculate_routes(start_lon, start_lat, end_lon, end_lat, time_str="15:00", interventions=None):
     """
     Directly accept coordinates to prevent (lat, lon) mixups.
     """
+    if interventions is None:
+        interventions = []
     time_multipliers = {
         "08:00": 0.80,
         "11:00": 0.92,
@@ -47,6 +49,19 @@ def calculate_routes(start_lon, start_lat, end_lon, end_lat, time_str="15:00"):
     
     # Adjust temperature based on time of day
     gdf_edges['adjusted_temp'] = gdf_edges['temperature_c'] * multiplier
+    
+    # Apply cooling interventions (trees/shade)
+    if interventions:
+        from shapely.geometry import Point
+        for inv in interventions:
+            # Check for both 'lng' and 'lon' keys just in case
+            lon = inv.get('lng', inv.get('lon'))
+            lat = inv.get('lat')
+            if lon is not None and lat is not None:
+                pt = Point(lon, lat)
+                # 150m is approx 0.00135 degrees
+                mask = gdf_edges.geometry.centroid.distance(pt) < 0.00135
+                gdf_edges.loc[mask, 'adjusted_temp'] = gdf_edges.loc[mask, 'adjusted_temp'] * 0.85
     
     # heat_cost: time_cost * (adjusted_temp ** 2)
     gdf_edges['heat_cost'] = gdf_edges['time_cost'] * (gdf_edges['adjusted_temp'] ** 2)
