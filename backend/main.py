@@ -56,7 +56,8 @@ def get_route(req: RouteRequest):
     return {
         "fastest": format_geojson(routes["time_route"], "Fastest Route"),
         "coolest": format_geojson(routes["heat_route"], "Coolest Route"),
-        "balanced": format_geojson(routes["balanced_route"], "Balanced Route")
+        "balanced": format_geojson(routes["balanced_route"], "Balanced Route"),
+        "insight_text": routes.get("insight_text", "")
     }
 
 @app.get("/api/heatmap")

@@ -141,6 +141,12 @@ function handlePinDrop(latlng) {
             }
             metricsContainer.style.display = 'none'; // Add this back
             
+            const insightBox = document.getElementById('route-insight-box');
+            if (insightBox) {
+                insightBox.style.display = 'none';
+                insightBox.textContent = '';
+            }
+            
             if (heatChartInstance) {
                 heatChartInstance.destroy();
                 heatChartInstance = null;
@@ -175,6 +181,12 @@ clearBtn.addEventListener('click', () => {
     findBtn.disabled = true;
     metricsContainer.style.display = 'none';
     clearRoutes();
+    
+    const insightBox = document.getElementById('route-insight-box');
+    if (insightBox) {
+        insightBox.style.display = 'none';
+        insightBox.textContent = '';
+    }
     
     if (heatChartInstance) {
         heatChartInstance.destroy();
@@ -235,6 +247,12 @@ findBtn.addEventListener('click', async () => {
         }
         
         metricsContainer.style.display = 'block';
+        
+        const insightBox = document.getElementById('route-insight-box');
+        if (data.insight_text) {
+            insightBox.textContent = data.insight_text;
+            insightBox.style.display = 'block';
+        }
         
     } catch (error) {
         console.error(error);

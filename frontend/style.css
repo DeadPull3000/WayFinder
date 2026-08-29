@@ -162,6 +162,18 @@ button {
     font-weight: 600;
 }
 
+.insight-box {
+    background-color: #f0f4fb;
+    color: #2c3e50;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.4;
+    border-left: 3px solid #3498db;
+}
+
 /* Route Colors */
 .chart-container {
     margin-top: 16px;

@@ -107,6 +107,12 @@ def calculate_routes(start_lon, start_lat, end_lon, end_lat, time_str="15:00"):
     geom_heat, heat_t, heat_h, heat_prof = get_route_info(path_heat)
     geom_bal, bal_t, bal_h, bal_prof = get_route_info(path_balanced)
     
+    extra_time_minutes = round((heat_t - time_t) / 60, 1)
+    heat_saved_pct = round(((time_h - heat_h) / time_h) * 100, 1) if time_h > 0 else 0.0
+    max_temp = max(time_prof) if time_prof else 0.0
+    
+    insight_text = f"Insight: The Fastest route exposes you to a severe peak of {max_temp}°C. By taking the Coolest route, you spend an extra {extra_time_minutes} minutes, but reduce your overall thermal exposure by {heat_saved_pct}%."
+    
     results = {
         "time_route": {
             "geometry": geom_time,
@@ -125,7 +131,8 @@ def calculate_routes(start_lon, start_lat, end_lon, end_lat, time_str="15:00"):
             "total_time_seconds": bal_t,
             "total_heat_exposure": bal_h,
             "temperature_profile": bal_prof
-        }
+        },
+        "insight_text": insight_text
     }
     return results
 
