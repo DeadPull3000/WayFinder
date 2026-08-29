@@ -163,6 +163,12 @@ button {
 }
 
 /* Route Colors */
+.chart-container {
+    margin-top: 16px;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 16px !important;
+}
+
 .fastest { border-left-color: #e74c3c; }
 .balanced { border-left-color: #f39c12; }
 .coolest { border-left-color: #3498db; }

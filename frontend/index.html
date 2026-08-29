@@ -9,6 +9,8 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div id="app">
@@ -56,6 +58,10 @@
                     <h3>Coolest Route</h3>
                     <div class="metric"><span>Time:</span> <span id="coolest-time">--</span></div>
                     <div class="metric"><span>Heat Exposure:</span> <span id="coolest-heat">--</span></div>
+                </div>
+                
+                <div class="chart-container" style="position: relative; height:200px; width:100%; padding: 10px;">
+                    <canvas id="heatChart"></canvas>
                 </div>
             </div>
         </aside>
