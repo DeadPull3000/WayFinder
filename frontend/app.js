@@ -9,6 +9,66 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
 
 // State variables
 let routeLayerGroup = L.layerGroup().addTo(map);
+let heatChartInstance = null;
+
+function renderHeatChart(fastestProfile, coolestProfile) {
+    const ctx = document.getElementById('heatChart').getContext('2d');
+    
+    // Destroy the old chart if it exists so we don't get overlapping hover glitches
+    if (heatChartInstance) {
+        heatChartInstance.destroy();
+    }
+
+    // Create a generic X-axis label array based on the longest route
+    const maxLength = Math.max(fastestProfile.length, coolestProfile.length);
+    const labels = Array.from({length: maxLength}, (_, i) => `Step ${i + 1}`);
+
+    heatChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Fastest Route (°C)',
+                    data: fastestProfile,
+                    borderColor: '#e74c3c', // Red
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0 // Hide dots for a smooth line
+                },
+                {
+                    label: 'Coolest Route (°C)',
+                    data: coolestProfile,
+                    borderColor: '#3498db', // Blue
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'top', labels: { boxWidth: 12 } }
+            },
+            scales: {
+                y: {
+                    title: { display: true, text: 'Temperature (°C)' },
+                    suggestedMin: 30, // Adjust based on Phoenix temps
+                    suggestedMax: 45
+                },
+                x: {
+                    display: false // Hide x-axis text to keep it clean
+                }
+            }
+        }
+    });
+}
 
 // DOM Elements
 const startInput = document.getElementById('start-input');
@@ -81,6 +141,11 @@ function handlePinDrop(latlng) {
             }
             metricsContainer.style.display = 'none'; // Add this back
             
+            if (heatChartInstance) {
+                heatChartInstance.destroy();
+                heatChartInstance = null;
+            }
+            
             markerOptions.fillColor = 'green';
             startMarker = L.circleMarker(latlng, markerOptions).addTo(map);
             endMarker = null;
@@ -110,6 +175,11 @@ clearBtn.addEventListener('click', () => {
     findBtn.disabled = true;
     metricsContainer.style.display = 'none';
     clearRoutes();
+    
+    if (heatChartInstance) {
+        heatChartInstance.destroy();
+        heatChartInstance = null;
+    }
 });
 
 const clearRoutes = () => {
@@ -154,6 +224,12 @@ findBtn.addEventListener('click', async () => {
         updateMetrics('fastest', data.fastest.features[0].properties);
         updateMetrics('balanced', data.balanced.features[0].properties);
         updateMetrics('coolest', data.coolest.features[0].properties);
+        
+        const fastestProfile = data.fastest.features[0].properties.temperature_profile;
+        const coolestProfile = data.coolest.features[0].properties.temperature_profile;
+        if (fastestProfile && coolestProfile) {
+            renderHeatChart(fastestProfile, coolestProfile);
+        }
         
         metricsContainer.style.display = 'block';
         
