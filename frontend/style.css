@@ -53,7 +53,7 @@ button, select, input, .sidebar-header, .leaflet-interactive, .checkbox-label {
     /* Dropdown Animation properties */
     transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
     overflow: hidden;
-    max-height: 90vh;
+    max-height: calc(100vh - 48px);
 }
 
 /* --- 3. Dropdown Header & Content Logic --- */
