@@ -1,51 +1,29 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+/* Basic Map Reset */
+body, html { margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #fff; background: #111; overflow: hidden; }
+#app { position: relative; width: 100vw; height: 100vh; }
+.map-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+#map { width: 100vw; height: 100vh; z-index: 1; }
 
-body, html {
-    height: 100%;
-    font-family: 'Inter', sans-serif;
-    color: #333;
-    overflow: hidden;
-}
-
-#app {
-    display: block;
-    height: 100vh;
-    width: 100vw;
-    position: relative;
-}
-
-.sidebar {
+/* True Glassmorphism Sidebar */
+.sidebar, #sidebar {
     position: absolute;
     top: 20px;
-    right: 20px;
-    width: 380px;
-    max-height: calc(100vh - 40px);
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
+    left: 20px; /* Moved to left for standard map UX */
+    width: 340px;
+    max-height: 90vh;
     overflow-y: auto;
+    z-index: 1000;
     
-    /* Glassmorphism */
-    background: rgba(255, 255, 255, 0.1);
+    /* The Glass Effect */
+    background: rgba(20, 20, 25, 0.65);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    color: #fff;
-}
-
-/* Force text to white for glassmorphism */
-.sidebar h1, .sidebar h2, .sidebar h3, .sidebar label, .sidebar p, .sidebar .metric span, .sidebar select {
-    color: #fff !important;
-}
-
-.sidebar select option {
-    color: #333; /* dropdown options should be dark to be legible */
+    padding: 24px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
 }
 
 header {
@@ -69,79 +47,76 @@ header h1 {
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-h2 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+/* Typography */
+h2, h3 { margin-top: 0; font-weight: 600; letter-spacing: -0.5px; }
+label { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255, 255, 255, 0.6); margin-bottom: 6px; display: block; }
 
-.instructions {
-    font-size: 14px;
-    margin-bottom: 20px;
-}
-
-.input-group {
-    margin-bottom: 16px;
-}
-
-.input-group label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    margin-bottom: 6px;
-}
-
-.input-group input, select {
+/* Sleek Inputs & Dropdowns */
+input[type="text"], select {
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
-    font-size: 14px;
-    font-family: 'Inter', sans-serif;
-    background-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     color: #fff;
-    transition: border-color 0.2s, background-color 0.2s;
+    padding: 12px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
-.input-group input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-
-.input-group input:focus, select:focus {
+input[type="text"]:focus, select:focus {
     outline: none;
-    border-color: rgba(255, 255, 255, 0.6);
-    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #00B4DB;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(0, 180, 219, 0.2);
 }
 
+/* Option text inside select needs dark bg to be visible in some browsers */
+select option { background: #222; color: #fff; }
+
+/* Buttons */
 button {
     width: 100%;
-    padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 6px;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
     font-size: 15px;
     font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-bottom: 10px;
-    background-color: rgba(255, 255, 255, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin-bottom: 12px;
+}
+
+/* "Cooling" Gradient for Primary Action */
+button#find-routes-btn, .primary-btn {
+    background: linear-gradient(135deg, #00B4DB, #0083B0);
     color: white;
+    box-shadow: 0 4px 15px rgba(0, 180, 219, 0.4);
 }
 
-#find-routes-btn:hover:not(:disabled) {
-    background-color: rgba(255, 255, 255, 0.25);
+button#find-routes-btn:hover:not(:disabled), .primary-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 180, 219, 0.6);
 }
 
-#find-routes-btn:disabled {
-    background-color: rgba(255, 255, 255, 0.05);
+button#find-routes-btn:disabled, .primary-btn:disabled {
+    background: rgba(255, 255, 255, 0.05);
     color: rgba(255, 255, 255, 0.3);
     cursor: not-allowed;
-    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+    transform: none;
 }
 
-#clear-btn:hover {
-    background-color: rgba(255, 255, 255, 0.25);
+/* Secondary Button */
+button#clear-map-btn, .secondary-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+button#clear-map-btn:hover, .secondary-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
 }
 
 /* Route Cards */
@@ -211,20 +186,17 @@ button {
     z-index: 1;
 }
 
-/* Tooltip Styles */
+/* Glassmorphic Tooltips */
 .heat-tooltip {
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    border: none;
-    border-radius: 4px;
+    background: rgba(20, 20, 25, 0.8) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #fff !important;
+    border-radius: 6px !important;
     font-weight: 600;
-    padding: 6px 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
 }
-
-.heat-tooltip::before {
-    display: none; /* Hide default leaflet tooltip triangle */
-}
+.heat-tooltip::before { border-top-color: rgba(20, 20, 25, 0.8) !important; }
 
 /* Prevent browser focus outline on Leaflet SVG paths */
 path.leaflet-interactive:focus {

@@ -79,7 +79,7 @@ function renderHeatChart(fastestProfile, coolestProfile) {
 const startInput = document.getElementById('start-input');
 const endInput = document.getElementById('end-input');
 const findBtn = document.getElementById('find-routes-btn');
-const clearBtn = document.getElementById('clear-btn');
+const clearBtn = document.getElementById('clear-map-btn');
 const metricsContainer = document.getElementById('metrics-container');
 
 // Custom Icons

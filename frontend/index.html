@@ -15,7 +15,7 @@
 <body>
     <div id="app">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        <div class="sidebar">
             <header>
                 <h1>Thermal Wayfinder</h1>
             </header>
@@ -48,8 +48,8 @@
                     <label style="cursor: pointer;"><input type="checkbox" id="planner-mode"> Urban Planner Mode (Simulate Shade)</label>
                 </div>
                 
-                <button id="find-routes-btn" disabled>Find Routes</button>
-                <button id="clear-btn">Clear Map</button>
+                <button id="find-routes-btn" class="primary-btn" disabled>Find Routes</button>
+                <button id="clear-map-btn" class="secondary-btn">Clear Map</button>
             </div>
             
             <div class="metrics-section" id="metrics-container" style="display: none;">
@@ -79,7 +79,7 @@
                     <canvas id="heatChart"></canvas>
                 </div>
             </div>
-        </aside>
+        </div>
         
         <!-- Map Container -->
         <main class="map-container">
