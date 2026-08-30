@@ -220,6 +220,7 @@ findBtn.addEventListener('click', async () => {
     
     findBtn.disabled = true;
     findBtn.textContent = 'Calculating...';
+    document.getElementById('loading-overlay').style.display = 'flex';
     clearRoutes();
     
     const departureTime = document.getElementById('departure-time').value;
@@ -275,6 +276,7 @@ findBtn.addEventListener('click', async () => {
         console.error(error);
         alert('Error calculating routes. Make sure the backend server is running and the points are within Downtown Phoenix.');
     } finally {
+        document.getElementById('loading-overlay').style.display = 'none';
         findBtn.disabled = false;
         findBtn.textContent = 'Find Routes';
     }
