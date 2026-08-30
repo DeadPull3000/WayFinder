@@ -362,3 +362,16 @@ const loadHeatmap = async () => {
 
 // Load heatmap on startup
 loadHeatmap();
+ 
+ / /   S i d e b a r   D r o p d o w n   T o g g l e  
+ d o c u m e n t . g e t E l e m e n t B y I d ( ' s i d e b a r - t o g g l e ' ) . a d d E v e n t L i s t e n e r ( ' c l i c k ' ,   f u n c t i o n ( )   {  
+         c o n s t   s i d e b a r   =   d o c u m e n t . g e t E l e m e n t B y I d ( ' s i d e b a r ' ) ;  
+         c o n s t   i c o n   =   d o c u m e n t . g e t E l e m e n t B y I d ( ' d r o p d o w n - i c o n ' ) ;  
+         s i d e b a r . c l a s s L i s t . t o g g l e ( ' c o l l a p s e d ' ) ;  
+         i f   ( s i d e b a r . c l a s s L i s t . c o n t a i n s ( ' c o l l a p s e d ' ) )   {  
+                 i c o n . s t y l e . t r a n s f o r m   =   ' r o t a t e ( - 9 0 d e g ) ' ;  
+         }   e l s e   {  
+                 i c o n . s t y l e . t r a n s f o r m   =   ' r o t a t e ( 0 d e g ) ' ;  
+         }  
+ } ) ;  
+ 

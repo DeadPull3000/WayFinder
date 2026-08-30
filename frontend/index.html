@@ -15,12 +15,16 @@
 <body>
     <div id="app">
         <!-- Sidebar -->
-        <div class="sidebar">
-            <header>
-                <h1>The Shady Side</h1>
-            </header>
+        <div class="sidebar" id="sidebar">
+            <!-- The Clickable Dropdown Header -->
+            <div class="sidebar-header" id="sidebar-toggle">
+                <h2>The Shady Side</h2>
+                <span id="dropdown-icon">▼</span>
+            </div>
             
-            <div class="controls-section">
+            <!-- The Collapsible Content -->
+            <div class="sidebar-content" id="sidebar-content">
+                <div class="controls-section">
                 <h2>Route Planning</h2>
                 <p class="instructions">Click on the map to set your start and end points.</p>
                 
@@ -79,6 +83,8 @@
                     <canvas id="heatChart"></canvas>
                 </div>
             </div>
+            </div>
+            <!-- End Collapsible Content -->
         </div>
         
         <!-- Map Container -->

@@ -1,40 +1,74 @@
 /* Basic Reset & Map */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-body, html { margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; background: #f0f2f5; overflow: hidden; }
+body, html { 
+    margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; background: #f0f2f5; overflow: hidden; 
+    cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8" fill="%23007AFF" opacity="0.4"/><circle cx="12" cy="12" r="3" fill="%23007AFF"/></svg>') 12 12, auto;
+}
+
+/* Pointer cursor for clickable items */
+button, select, input, .sidebar-header, .leaflet-interactive, .checkbox-label {
+    cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="%23007AFF" opacity="0.2"/><circle cx="12" cy="12" r="5" fill="%23007AFF"/></svg>') 12 12, pointer !important;
+}
 #app { position: relative; width: 100vw; height: 100vh; }
 .map-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
 #map { width: 100vw; height: 100vh; z-index: 1; }
 
-/* True Floating Glass Sidebar */
+/* --- 2. Higher Transparency Glassmorphism --- */
 .sidebar, #sidebar {
     position: absolute;
     top: 24px;
     left: 24px; 
     width: 320px;
-    max-height: calc(100vh - 48px); /* Ensures it never hits the bottom */
-    overflow-y: auto;
     z-index: 1000;
     
-    /* Premium Light Glass */
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.45); /* Much more transparent */
+    backdrop-filter: blur(35px); /* Heavier blur for frosted look */
+    -webkit-backdrop-filter: blur(35px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
     border-radius: 20px;
     padding: 28px 24px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column;
+    
+    /* Dropdown Animation properties */
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden;
+    max-height: 90vh;
 }
 
-header {
+/* --- 3. Dropdown Header & Content Logic --- */
+.sidebar-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    padding-bottom: 24px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    user-select: none;
 }
-.logo-icon { display: none; }
-header h1 { font-size: 22px; font-weight: 700; margin: 0; }
+.sidebar-header h2 {
+    margin: 0;
+    font-size: 20px;
+}
+#dropdown-icon {
+    font-size: 14px;
+    color: #007AFF;
+    transition: transform 0.4s ease;
+}
+.sidebar-content {
+    opacity: 1;
+    transition: opacity 0.4s ease, margin-top 0.4s ease;
+    margin-top: 20px;
+}
+
+/* Collapsed State Class */
+.sidebar.collapsed {
+    max-height: 76px; /* Exactly the height of the header + padding */
+    background: rgba(255, 255, 255, 0.65); /* Slightly less transparent when closed so it pops */
+}
+.sidebar.collapsed .sidebar-content {
+    opacity: 0;
+    pointer-events: none;
+    margin-top: 0;
+}
 .controls-section, .metrics-section { padding: 24px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
 
 /* Hide Ugly Scrollbar but keep functionality */
