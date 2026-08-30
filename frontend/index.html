@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Shady Side</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <!-- The Clickable Dropdown Header -->
+            <div class="sidebar-header" id="sidebar-toggle">
+                <h2>The Shady Side</h2>
+                <span id="dropdown-icon">▼</span>
+            </div>
+            
+            <!-- The Collapsible Content -->
+            <div class="sidebar-content" id="sidebar-content">
+                <div class="controls-section">
+                <h3>Route Planning</h3>
+                <p class="instructions">Click on the map to set your start and end points.</p>
+                
+                <div class="input-group">
+                    <label>Start Location</label>
+                    <input type="text" id="start-input" placeholder="Click map to set start..." readonly>
+                </div>
+                
+                <div class="input-group">
+                    <label>End Location</label>
+                    <input type="text" id="end-input" placeholder="Click map to set end..." readonly>
+                </div>
+                
+                <div class="time-selector" style="margin-bottom: 15px;">
+                    <label for="departure-time" style="display: block; font-size: 14px; font-weight: bold; margin-bottom: 5px;">Departure Time</label>
+                    <select id="departure-time" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+                        <option value="08:00">08:00 AM (Morning)</option>
+                        <option value="11:00">11:00 AM (Mid-Day)</option>
+                        <option value="15:00" selected>03:00 PM (Peak Heat)</option>
+                        <option value="19:00">07:00 PM (Evening)</option>
+                    </select>
+                </div>
+                
+                <div class="planner-mode-container" style="margin-bottom: 15px; font-size: 14px;">
+                    <label class="checkbox-label"><input type="checkbox" id="planner-mode"> Urban Planner Mode (Simulate Shade)</label>
+                </div>
+                
+                <button id="find-routes-btn" class="primary-btn" disabled>Find Routes</button>
+                <button id="clear-map-btn" class="secondary-btn">Clear Map</button>
+            </div>
+            
+            <div class="metrics-section" id="metrics-container" style="display: none;">
+                <h3>Route Options</h3>
+                
+                <div class="route-card fastest">
+                    <h3>Fastest Route</h3>
+                    <div class="metric"><span>Time:</span> <span id="fastest-time">--</span></div>
+                    <div class="metric"><span>Heat Exposure:</span> <span id="fastest-heat">--</span></div>
+                </div>
+                
+                <div class="route-card balanced">
+                    <h3>Balanced Route</h3>
+                    <div class="metric"><span>Time:</span> <span id="balanced-time">--</span></div>
+                    <div class="metric"><span>Heat Exposure:</span> <span id="balanced-heat">--</span></div>
+                </div>
+                
+                <div class="route-card coolest">
+                    <h3>Coolest Route</h3>
+                    <div class="metric"><span>Time:</span> <span id="coolest-time">--</span></div>
+                    <div class="metric"><span>Heat Exposure:</span> <span id="coolest-heat">--</span></div>
+                </div>
+                
+                <div id="route-insight-box" class="insight-box" style="display: none;"></div>
+                
+                <div class="chart-container" style="position: relative; height:200px; width:100%; padding: 10px;">
+                    <canvas id="heatChart"></canvas>
+                </div>
+            </div>
+            </div>
+            <!-- End Collapsible Content -->
+        </div>
+        
+        <!-- Map Container -->
+        <main class="map-container">
+            <div id="map"></div>
+        </main>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+    <script src="app.js"></script>
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Calculating thermal routes...</p>
+    </div>
+
+</body>
+</html>
