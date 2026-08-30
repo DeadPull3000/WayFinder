@@ -1,7 +1,7 @@
 // Initialize Map (Downtown Phoenix)
 const map = L.map('map').setView([33.4484, -112.0740], 14);
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: 'abcd',
     maxZoom: 20
@@ -55,12 +55,15 @@ function renderHeatChart(fastestProfile, coolestProfile) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            color: '#fff',
             plugins: {
-                legend: { position: 'top', labels: { boxWidth: 12 } }
+                legend: { position: 'top', labels: { boxWidth: 12, color: '#fff' } }
             },
             scales: {
                 y: {
-                    title: { display: true, text: 'Temperature (°C)' },
+                    title: { display: true, text: 'Temperature (°C)', color: '#fff' },
+                    ticks: { color: '#fff' },
+                    grid: { color: 'rgba(255, 255, 255, 0.1)' },
                     suggestedMin: 30, // Adjust based on Phoenix temps
                     suggestedMax: 45
                 },
