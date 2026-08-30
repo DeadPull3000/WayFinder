@@ -105,7 +105,7 @@ function safelyUpdateInput(keyword, latlng) {
         if (input) {
             input.value = latlng ? `${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}` : '';
         } else {
-            console.warn(`Thermal Wayfinder Warning: Could not find HTML input for '${keyword}'. Check your HTML IDs.`);
+            console.warn(`The Shady Side Warning: Could not find HTML input for '${keyword}'. Check your HTML IDs.`);
         }
     } catch (err) {
         console.error("Error updating input:", err);
