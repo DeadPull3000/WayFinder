@@ -1,5 +1,6 @@
 // Initialize Map (Downtown Phoenix)
-const map = L.map('map').setView([33.4484, -112.0740], 14);
+const map = L.map('map', { zoomControl: false }).setView([33.4484, -112.0740], 14);
+L.control.zoom({ position: 'topright' }).addTo(map);
 
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
