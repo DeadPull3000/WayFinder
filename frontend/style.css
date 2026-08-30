@@ -1,8 +1,11 @@
 /* Basic Reset & Map */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap');
 body, html { 
     margin: 0; padding: 0; font-family: 'Inter', -apple-system, sans-serif; background: #f0f2f5; overflow: hidden; 
     cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8" fill="%23007AFF" opacity="0.4"/><circle cx="12" cy="12" r="3" fill="%23007AFF"/></svg>') 12 12, auto;
+}
+body, html, .sidebar, input, select, button { 
+    font-family: 'Inter', -apple-system, sans-serif; 
 }
 
 /* Pointer cursor for clickable items */
@@ -44,9 +47,17 @@ button, select, input, .sidebar-header, .leaflet-interactive, .checkbox-label {
     align-items: center;
     user-select: none;
 }
-.sidebar-header h2 {
+.sidebar-header h2, h2 { 
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 800;
+    font-size: 22px;
+    color: #111;
     margin: 0;
-    font-size: 20px;
+    background: linear-gradient(90deg, #111, #444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Gives the text a very subtle, premium gradient */
 }
 #dropdown-icon {
     font-size: 14px;
@@ -75,10 +86,30 @@ button, select, input, .sidebar-header, .leaflet-interactive, .checkbox-label {
 .sidebar::-webkit-scrollbar { width: 0px; background: transparent; }
 .sidebar { -ms-overflow-style: none; scrollbar-width: none; }
 
-/* Typography Polish */
-h2 { margin: 0 0 20px 0; font-size: 22px; font-weight: 700; color: #111; letter-spacing: -0.5px; }
-h3 { margin: 24px 0 16px 0; font-size: 16px; font-weight: 600; color: #111; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 8px; }
-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: #666; margin-bottom: 6px; display: block; font-weight: 600; }
+/* 4. Style Subheaders (Route Planning, Route Options) */
+h3 { 
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #333;
+    margin: 24px 0 16px 0; 
+    border-bottom: 2px solid rgba(0,0,0,0.05); 
+    padding-bottom: 8px; 
+}
+
+/* 5. Ensure labels are perfectly crisp */
+label { 
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    color: #555; 
+    margin-bottom: 8px; 
+    display: block; 
+    font-weight: 600; 
+}
 p, .instructions { font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 20px; }
 
 /* Sleek Inputs */
