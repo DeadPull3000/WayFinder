@@ -333,16 +333,6 @@ const loadHeatmap = async () => {
                 };
             },
             onEachFeature: function(feature, layer) {
-                // Ensure tooltips are strictly hover-only
-                if (feature.properties && feature.properties.temperature_c) {
-                    layer.bindTooltip(`Temperature: ${feature.properties.temperature_c.toFixed(1)}°C`, {
-                        sticky: true,
-                        permanent: false, // Prevents them from getting stuck
-                        direction: "auto",
-                        className: "heat-tooltip"
-                    });
-                }
-
                 // Forward the click safely
                 layer.on('click', function(e) {
                     L.DomEvent.stopPropagation(e); // Stop the event from causing Leaflet visual glitches
