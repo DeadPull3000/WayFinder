@@ -1,8 +1,8 @@
-# ☀️ Thermal Wayfinder
+# ☀️ The Shady Side
 
 > **Navigation where heat is part of the terrain.**
 
-![Thermal Wayfinder Dashboard Screenshot](placeholder_for_screenshot.png)
+![The Shady Side Dashboard Screenshot](placeholder_for_screenshot.png)
 
 ---
 
@@ -10,7 +10,7 @@
 Traditional navigation apps like Google Maps or Waze calculate routes based entirely on distance and traffic. But in rapidly warming urban environments (like Phoenix, Arizona, where pavement temperatures can exceed 160°F), the "shortest" route can sometimes be the most dangerous. Pedestrians need a way to navigate cities safely during peak heat waves, optimizing for thermal comfort and shade rather than just time.
 
 ## 💡 The Solution
-**Thermal Wayfinder** is a time-dependent, multi-objective graph routing engine powered by **FortyGuard's** hyper-local temperature API. 
+**The Shady Side** is a time-dependent, multi-objective graph routing engine powered by **FortyGuard's** hyper-local temperature API. 
 
 We transform extreme urban heat from an invisible threat into a navigable geographic layer. By dynamically weighting street network edges with real-time, high-resolution thermal data, our algorithm mathematically discovers the absolute coolest path to your destination—balancing travel time against critical heat exposure.
 
@@ -40,15 +40,15 @@ Our stack is built for spatial accuracy and high-performance graph traversal:
 
 ## 🚀 Local Setup Instructions (For Judges)
 
-Want to run the Thermal Wayfinder engine on your own machine? Follow these steps:
+Want to run The Shady Side engine on your own machine? Follow these steps:
 
 ### 1. Prerequisites
 Ensure you have **Python 3.9+** and **Git** installed on your machine.
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/Thermal-Wayfinder.git
-cd Thermal-Wayfinder
+git clone https://github.com/yourusername/The-Shady-Side.git
+cd The-Shady-Side
 ```
 
 ### 3. Install Dependencies
