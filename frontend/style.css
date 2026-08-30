@@ -84,6 +84,8 @@ button, select, input, .sidebar-header, .leaflet-interactive, .checkbox-label {
     opacity: 1;
     transition: opacity 0.4s ease, margin-top 0.4s ease;
     margin-top: 20px;
+    overflow-y: auto;
+    flex: 1;
 }
 
 /* Collapsed State Class */
@@ -99,8 +101,8 @@ button, select, input, .sidebar-header, .leaflet-interactive, .checkbox-label {
 .controls-section, .metrics-section { padding: 24px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
 
 /* Hide Ugly Scrollbar but keep functionality */
-.sidebar::-webkit-scrollbar { width: 0px; background: transparent; }
-.sidebar { -ms-overflow-style: none; scrollbar-width: none; }
+.sidebar::-webkit-scrollbar, .sidebar-content::-webkit-scrollbar { width: 0px; background: transparent; }
+.sidebar, .sidebar-content { -ms-overflow-style: none; scrollbar-width: none; }
 
 /* 4. Style Subheaders (Route Planning, Route Options) */
 h3 { 
