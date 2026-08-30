@@ -1,0 +1,323 @@
+/* Basic Reset & Map */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Inter:wght@400;500;600&display=swap');
+/* 1. Base Reset */
+body, html { 
+    margin: 0; 
+    padding: 0; 
+    width: 100%; 
+    height: 100%; 
+    overflow: hidden; 
+    background: #f0f2f5; 
+    cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="8" fill="%23007AFF" opacity="0.4"/><circle cx="12" cy="12" r="3" fill="%23007AFF"/></svg>') 12 12, auto;
+}
+
+body, html, .sidebar, input, select, button { 
+    font-family: 'Inter', -apple-system, sans-serif; 
+}
+
+/* Pointer cursor for clickable items */
+button, select, input, .sidebar-header, .leaflet-interactive, .checkbox-label {
+    cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" fill="%23007AFF" opacity="0.2"/><circle cx="12" cy="12" r="5" fill="%23007AFF"/></svg>') 12 12, pointer !important;
+}
+
+/* 2. The Map Container (CRITICAL) */
+#app { position: relative; width: 100vw; height: 100vh; }
+.map-container { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; }
+#map { 
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw; 
+    height: 100vh; 
+    z-index: 1; 
+}
+
+/* --- 2. Higher Transparency Glassmorphism --- */
+.sidebar, #sidebar {
+    position: absolute;
+    top: 24px;
+    left: 24px; 
+    width: 320px;
+    z-index: 1000;
+    
+    background: rgba(255, 255, 255, 0.45); /* Much more transparent */
+    backdrop-filter: blur(35px); /* Heavier blur for frosted look */
+    -webkit-backdrop-filter: blur(35px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
+    padding: 28px 24px;
+    box-sizing: border-box;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    
+    /* Dropdown Animation properties */
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    overflow: hidden;
+    max-height: calc(100vh - 48px);
+}
+
+/* --- 3. Dropdown Header & Content Logic --- */
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+}
+.sidebar-header h2, h2 { 
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 800;
+    font-size: 22px;
+    color: #111;
+    margin: 0;
+    background: linear-gradient(90deg, #111, #444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Gives the text a very subtle, premium gradient */
+}
+#dropdown-icon {
+    font-size: 14px;
+    color: #007AFF;
+    transition: transform 0.4s ease;
+}
+.sidebar-content {
+    opacity: 1;
+    transition: opacity 0.4s ease, margin-top 0.4s ease;
+    margin-top: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Collapsed State Class */
+.sidebar.collapsed {
+    max-height: 76px; /* Exactly the height of the header + padding */
+    background: rgba(255, 255, 255, 0.65); /* Slightly less transparent when closed so it pops */
+}
+.sidebar.collapsed .sidebar-content {
+    opacity: 0;
+    pointer-events: none;
+    margin-top: 0;
+}
+.controls-section, .metrics-section { padding: 24px 0; border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+
+/* Hide Ugly Scrollbar but keep functionality */
+.sidebar::-webkit-scrollbar, .sidebar-content::-webkit-scrollbar { width: 0px; background: transparent; }
+.sidebar, .sidebar-content { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* 4. Style Subheaders (Route Planning, Route Options) */
+h3 { 
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+    font-size: 14px;
+    color: #333;
+    margin: 24px 0 16px 0; 
+    border-bottom: 2px solid rgba(0,0,0,0.05); 
+    padding-bottom: 8px; 
+}
+
+/* 5. Ensure labels are perfectly crisp */
+label { 
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    color: #555; 
+    margin-bottom: 8px; 
+    display: block; 
+    font-weight: 600; 
+}
+p, .instructions { font-size: 13px; color: #555; line-height: 1.5; margin-bottom: 20px; }
+
+/* Sleek Inputs */
+.input-group { margin-bottom: 16px; }
+input[type="text"], select {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #111;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    transition: all 0.2s ease;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus, select:focus {
+    outline: none;
+    border-color: #007AFF;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+}
+
+/* Checkbox Styling (Urban Planner Mode) */
+input[type="checkbox"] { margin-right: 8px; accent-color: #007AFF; }
+.checkbox-label { display: flex; align-items: center; font-size: 12px; font-weight: 600; color: #333; cursor: pointer; margin-bottom: 20px; text-transform: none; letter-spacing: 0;}
+
+/* Premium Buttons */
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 12px;
+}
+
+button#find-routes-btn, .primary-btn {
+    background: linear-gradient(180deg, #0088FF 0%, #0070F0 100%);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 112, 240, 0.3), inset 0 1px 1px rgba(255,255,255,0.2);
+}
+
+button#find-routes-btn:hover:not(:disabled), .primary-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 112, 240, 0.4), inset 0 1px 1px rgba(255,255,255,0.2);
+}
+
+button#find-routes-btn:active:not(:disabled), .primary-btn:active:not(:disabled) {
+    transform: translateY(1px);
+    background: #0060D0;
+    box-shadow: none;
+}
+
+button#find-routes-btn:disabled, .primary-btn:disabled {
+    background: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.3);
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+button#clear-map-btn, .secondary-btn {
+    background: #ffffff;
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+button#clear-map-btn:hover, .secondary-btn:hover {
+    background: #f8f9fa;
+    border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* Route Option Cards */
+.route-card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border-left: 4px solid #ddd;
+    color: #111;
+}
+
+.route-card h3 {
+    font-size: 15px;
+    margin-bottom: 12px;
+    color: #111;
+}
+
+.route-card .metric {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.route-card .metric span:first-child {
+    color: #666;
+}
+
+.route-card .metric span:last-child {
+    font-weight: 600;
+    color: #111;
+}
+
+.insight-box {
+    background-color: rgba(0, 180, 219, 0.08);
+    color: #005f73;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.4;
+    border-left: 3px solid #00B4DB;
+}
+
+/* Route Colors */
+.chart-container {
+    margin-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 16px !important;
+}
+
+.fastest { border-left-color: #e74c3c; }
+.balanced { border-left-color: #f39c12; }
+.coolest { border-left-color: #3498db; }
+
+
+
+/* Light Tooltips */
+.heat-tooltip {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    color: #111 !important;
+    border-radius: 6px !important;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+}
+
+.heat-tooltip::before { border-top-color: rgba(255, 255, 255, 0.95) !important; }
+
+/* Prevent browser focus outline on Leaflet SVG paths */
+path.leaflet-interactive:focus {
+    outline: none !important;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.6);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #00B4DB;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-overlay p {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+}
