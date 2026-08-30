@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from shapely.geometry import mapping, MultiLineString
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 # Add current directory to path so we can import routing
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -62,6 +64,14 @@ def get_route(req: RouteRequest):
         "balanced": format_geojson(routes["balanced_route"], "Balanced Route"),
         "insight_text": routes.get("insight_text", "")
     }
+
+# 1. Explicitly serve the index.html at the root URL
+@app.get("/")
+async def serve_frontend():
+    return FileResponse("frontend/index.html")
+
+# 2. Mount the rest of the frontend folder (for CSS, JS, and images)
+app.mount("/", StaticFiles(directory="frontend"), name="frontend_static")
 
 @app.get("/api/heatmap")
 def get_heatmap():
