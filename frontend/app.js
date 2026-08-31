@@ -239,7 +239,7 @@ findBtn.addEventListener('click', async () => {
     };
     
     try {
-        const response = await fetch('https://the-shady-side.onrender.com/api/route'...), {
+        const response = await fetch('https://the-shady-side.onrender.com/api/route', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
